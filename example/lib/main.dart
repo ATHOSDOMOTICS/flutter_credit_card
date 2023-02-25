@@ -61,7 +61,7 @@ class MySampleState extends State<MySample> {
                 CreditCardWidget(
                   glassmorphismConfig:
                       useGlassMorphism ? Glassmorphism.defaultConfig() : null,
-                  cardNumber: cardNumber,
+                  last4: cardNumber,
                   expiryDate: expiryDate,
                   cardHolderName: cardHolderName,
                   cvvCode: cvvCode,

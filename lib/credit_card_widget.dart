@@ -22,7 +22,7 @@ const Map<CardType, String> CardTypeIconAsset = <CardType, String>{
 class CreditCardWidget extends StatefulWidget {
   const CreditCardWidget({
     Key? key,
-    required this.cardNumber,
+    required this.last4,
     required this.expiryDate,
     required this.cardHolderName,
     required this.cvvCode,
@@ -52,7 +52,7 @@ class CreditCardWidget extends StatefulWidget {
     this.backCardBorder,
   }) : super(key: key);
 
-  final String cardNumber;
+  final String last4;
   final String expiryDate;
   final String cardHolderName;
   final String cvvCode;
@@ -160,9 +160,8 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
       isGestureUpdate = false;
     }
 
-    final CardType? cardType = widget.cardType != null
-        ? widget.cardType
-        : detectCCType(widget.cardNumber);
+    final CardType? cardType =
+        widget.cardType != null ? widget.cardType : detectCCType(widget.last4);
     widget.onCreditCardWidgetChange(CreditCardBrand(cardType));
 
     return Stack(
@@ -258,21 +257,21 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
               ),
             );
 
-    String number = widget.cardNumber;
-    if (widget.obscureCardNumber) {
-      final String stripped = number.replaceAll(RegExp(r'[^\d]'), '');
-      if (stripped.length > 8) {
-        final String middle = number
-            .substring(4, number.length - 5)
-            .trim()
-            .replaceAll(RegExp(r'\d'), '*');
-        number = stripped.substring(0, 4) +
-            ' ' +
-            middle +
-            ' ' +
-            stripped.substring(stripped.length - 4);
-      }
-    }
+    final String number = '**** **** **** ' + widget.last4;
+    // if (widget.obscureCardNumber) {
+    //   final String stripped = number.replaceAll(RegExp(r'[^\d]'), '');
+    //   if (stripped.length > 8) {
+    //     final String middle = number
+    //         .substring(4, number.length - 5)
+    //         .trim()
+    //         .replaceAll(RegExp(r'\d'), '*');
+    //     number = stripped.substring(0, 4) +
+    //         ' ' +
+    //         middle +
+    //         ' ' +
+    //         stripped.substring(stripped.length - 4);
+    //   }
+    // }
     return CardBackground(
       backgroundImage: widget.backgroundImage,
       backgroundNetworkImage: widget.backgroundNetworkImage,
@@ -321,7 +320,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
             child: Padding(
               padding: const EdgeInsets.only(left: 16),
               child: Text(
-                widget.cardNumber.isEmpty ? 'XXXX XXXX XXXX XXXX' : number,
+                widget.last4.isEmpty ? 'XXXX XXXX XXXX XXXX' : number,
                 style: widget.textStyle ?? defaultTextStyle,
               ),
             ),
@@ -335,7 +334,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    'VALID\nTHRU',
+                    'EXPIRE\nLE',
                     style: widget.textStyle ??
                         defaultTextStyle.copyWith(fontSize: 7),
                     textAlign: TextAlign.center,
@@ -372,7 +371,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
                 ),
                 widget.cardType != null
                     ? getCardTypeImage(widget.cardType)
-                    : getCardTypeIcon(widget.cardNumber),
+                    : getCardTypeIcon(widget.last4),
               ],
             ),
           ),
@@ -464,7 +463,7 @@ class _CreditCardWidgetState extends State<CreditCardWidget>
                 padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                 child: widget.cardType != null
                     ? getCardTypeImage(widget.cardType)
-                    : getCardTypeIcon(widget.cardNumber),
+                    : getCardTypeIcon(widget.last4),
               ),
             ),
           ),
